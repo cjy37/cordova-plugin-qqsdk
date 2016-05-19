@@ -1,9 +1,11 @@
 package org.tencent.qq;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 
+import com.tencent.connect.UserInfo;
 import com.tencent.connect.common.Constants;
 import com.tencent.connect.share.QQShare;
 import com.tencent.connect.share.QzoneShare;
@@ -25,6 +27,8 @@ public class QQ extends CordovaPlugin {
 
     private static Tencent mTencent;
     private CallbackContext currentCallbackContext;
+    private Context context;
+    private JSONObject qqRes;
     private String APP_ID;
     private static final String QQ_APP_ID = "qq_app_id";
     private static final String QQ_CANCEL_BY_USER = "cancelled by user";
@@ -295,10 +299,47 @@ public class QQ extends CordovaPlugin {
                 return;
             }
             initOpenidAndToken(jsonResponse);
+            /*
             JSONObject jo = makeJson(mTencent.getAccessToken(),
                     mTencent.getOpenId());
             QQ.this.webView.sendPluginResult(new PluginResult(
                     PluginResult.Status.OK, jo), currentCallbackContext.getCallbackId());
+                    */
+
+            qqRes=(JSONObject)response;
+            UserInfo qqInfo = new UserInfo(context, mTencent.getQQToken());
+            qqInfo.getUserInfo(new IUiListener() {
+                @Override
+                public void onError(UiError arg0) {
+                    // TODO Auto-generated method stub
+                    QQ.this.webView.sendPluginResult(new PluginResult(
+                            PluginResult.Status.ERROR, QQ_LOGIN_ERROR), currentCallbackContext.getCallbackId());
+                }
+                @Override
+                public void onComplete(Object json) {
+                    // TODO Auto-generated method stub
+                    try{
+                        String access_token=qqRes.getString("access_token").toString();
+                        String openid=qqRes.getString("openid").toString();
+                        JSONObject qqJson=(JSONObject)json;
+                        qqJson.put("access_token",access_token);
+                        qqJson.put("openid",openid);
+                        //mCallbackContext.success(qqJson);
+                        QQ.this.webView.sendPluginResult(new PluginResult(
+                                PluginResult.Status.OK, qqJson), currentCallbackContext.getCallbackId());
+                    }
+                    catch(JSONException e){
+                    }
+                }
+                @Override
+                public void onCancel() {
+                    // TODO Auto-generated method stub
+                    QQ.this.webView.sendPluginResult(new PluginResult(
+                            PluginResult.Status.ERROR, QQ_CANCEL_BY_USER), currentCallbackContext.getCallbackId());
+                }
+            });
+
+
         }
 
         @Override
