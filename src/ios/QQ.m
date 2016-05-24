@@ -271,16 +271,16 @@ NSString *QQ_LOGIN_NETWORK_ERROR = @"QQ login network error";
             kOPEN_PERMISSION_MATCH_NICK_TIPS_WEIBO,
                     nil];
     self.callback = command.callbackId;
-    if (self.tencentOAuth.isSessionValid) {
-        NSMutableDictionary *Dic = [NSMutableDictionary dictionaryWithCapacity:2];
-        [Dic setObject:self.tencentOAuth.openId forKey:@"userid"];
-        [Dic setObject:self.tencentOAuth.accessToken forKey:@"access_token"];
-        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:Dic];
-        [self.commandDelegate sendPluginResult:pluginResult callbackId:self.callback];
-    }
-    else {
+//    if (self.tencentOAuth.isSessionValid) {
+ //       NSMutableDictionary *Dic = [NSMutableDictionary dictionaryWithCapacity:2];
+ //       [Dic setObject:self.tencentOAuth.openId forKey:@"userid"];
+ //       [Dic setObject:self.tencentOAuth.accessToken forKey:@"access_token"];
+ //       CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:Dic];
+ //       [self.commandDelegate sendPluginResult:pluginResult callbackId:self.callback];
+ //   }
+ //   else {
         [self.tencentOAuth authorize:self.permissions inSafari:NO];
-    }
+  //  }
 }
 
 @end
