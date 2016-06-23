@@ -173,9 +173,6 @@ NSString *QQ_LOGIN_NETWORK_ERROR = @"QQ login network error";
 #pragma mark - TencentSessionDelegate
 - (void)tencentDidLogin {
     if (self.tencentOAuth.accessToken && 0 != [self.tencentOAuth.accessToken length]) {
-        NSMutableDictionary *Dic = [NSMutableDictionary dictionaryWithCapacity:2];
-        [Dic setObject:self.tencentOAuth.openId forKey:@"userid"];
-        [Dic setObject:self.tencentOAuth.accessToken forKey:@"access_token"];
         bool response=[_tencentOAuth getUserInfo];
         if(!response)
         {
